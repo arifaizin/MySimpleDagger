@@ -33,19 +33,18 @@ open class MyApplication : Application(){
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var engine: Engine
+    lateinit var car: Car
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         (application as MyApplication).appComponent.inject(this)
 
-        val car = Car(engine)
         car.start()
     }
 }
 
-class Car(private val engine: Engine) {
+class Car @Inject constructor(private val engine: Engine) {
     fun start() {
         engine.start()
     }
