@@ -1,8 +1,10 @@
 package com.dicoding.mysimpledagger
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -11,14 +13,14 @@ import javax.inject.Inject
 @Module
 class AppModule {
     @Provides
-    fun provideEngine(): Engine = Engine()
+    fun provideEngine(context: Context): Engine = Engine(context)
 }
 
 @Component(modules = [AppModule::class])
 interface AppComponent {
     @Component.Factory
     interface Factory {
-        fun create(): AppComponent
+        fun create(@BindsInstance context: Context): AppComponent
     }
 
     fun inject(activity: MainActivity)
@@ -26,8 +28,9 @@ interface AppComponent {
 
 open class MyApplication : Application(){
     val appComponent: AppComponent by lazy {
-        DaggerAppComponent.factory().create()
-    }
+        DaggerAppComponent.factory().create(
+            applicationContext
+        )    }
 }
 
 class MainActivity : AppCompatActivity() {
@@ -50,8 +53,8 @@ class Car @Inject constructor(private val engine: Engine) {
     }
 }
 
-class Engine {
+class Engine(val context: Context) {
     fun start() {
-        println("Engine started....")
+        println(context.applicationContext.getString(R.string.engine_start))
     }
 }

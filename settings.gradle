@@ -1,2 +1,2 @@
-rootProject.name='My Dagger Injection'
+rootProject.name='My Simple Dagger'
 include ':app'
