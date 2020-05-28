@@ -9,6 +9,7 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @Module
 class AppModule {
@@ -16,6 +17,7 @@ class AppModule {
     fun provideEngine(context: Context): Engine = Engine(context)
 }
 
+@Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {
     @Component.Factory
@@ -39,14 +41,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var car: Car
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as MyApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        (application as MyApplication).appComponent.inject(this)
 
         car.start()
     }
 }
 
+@Singleton
 class Car @Inject constructor(private val engine: Engine) {
     fun start() {
         engine.start()
